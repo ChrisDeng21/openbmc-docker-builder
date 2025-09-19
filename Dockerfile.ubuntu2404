@@ -1,0 +1,52 @@
+# Use the official Ubuntu base image from Docker Hub
+FROM ubuntu:24.04
+
+# Set metadata for the image (optional)
+LABEL maintainer="Chris Deng <chris198421@gmail.com>"
+LABEL version="1.0"
+LABEL description="OpenBMC builder for Docker."
+
+# Tell Debian/Ubuntu not to prompt interactive questions
+# (e.g. menus, prompts) when installing packages
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update the package list and install any necessary packages
+# This example installs curl and git, which are common utilities
+RUN apt-get update && apt-get install -yy \
+    build-essential \
+    chrpath \
+    cpio \
+    debianutils \
+    diffstat \
+    file \
+    gawk \
+    git \
+    iputils-ping \
+    libdata-dumper-simple-perl \
+    lz4 \
+    libsdl1.2-dev \
+    libthread-queue-any-perl \
+    locales \
+    python3 \
+    socat \
+    subversion \
+    texinfo \
+    vim \
+    wget \
+    zstd
+
+# Config locale
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# Delete the default user "ubuntu" (to avoid UID conflicts)
+RUN if id ubuntu > /dev/null 2>&1; then userdel -r ubuntu > /dev/null 2>&1; fi
+
+# Copy application files (if any) into the container
+COPY openbmc-builder-env-check.sh /openbmc-builder-env-check.sh
+RUN chmod +x /openbmc-builder-env-check.sh
+
+# Define the command to run when the container starts
+ENTRYPOINT ["/openbmc-builder-env-check.sh", "docker"]
