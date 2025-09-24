@@ -29,6 +29,7 @@ docker run -it \
   -e LOCAL_UID=$(id -u) \
   -e LOCAL_GID=$(id -g) \
   -e LOCAL_USER=$USER \
+  -h obmc-builder \
   obmc-builder-ubuntu2204
 
 # Ubuntu 24.04
@@ -37,6 +38,7 @@ docker run -it \
   -e LOCAL_UID=$(id -u) \
   -e LOCAL_GID=$(id -g) \
   -e LOCAL_USER=$USER \
+  -h obmc-builder \
   obmc-builder-ubuntu2404
 ```
 This will automatically check environment and switch to a non-root user.  
